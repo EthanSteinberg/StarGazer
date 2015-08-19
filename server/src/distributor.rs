@@ -9,6 +9,7 @@ use hyper::server::Request;
 use hyper::server::Response;
 use hyper::Server;
 use hyper::uri::RequestUri;
+use hyper::header::AccessControlAllowOrigin;
 use sqlite3::DatabaseConnection;
 use std::collections::HashMap;
 
@@ -34,12 +35,13 @@ fn get_stars(conn: &mut DatabaseConnection, req: Request) -> Option<Vec<StarEven
         .and_then(|query| get_stars_from_query(conn, query))
 }
 
-fn hello(req: Request, res: Response<Fresh>) {
+fn hello(req: Request, mut res: Response<Fresh>) {
     
     let mut conn = open_connection();
 
     if let Some(stars) = get_stars(&mut conn, req) {
         let stars_json = serde_json::to_string_pretty(&stars).unwrap();
+        res.headers_mut().set(AccessControlAllowOrigin::Any);
         res.send(stars_json.as_bytes()).unwrap();
     } else {
         res.send(b"Invalid params").unwrap();
@@ -48,5 +50,5 @@ fn hello(req: Request, res: Response<Fresh>) {
 }
 
 fn main() {
-    Server::http("127.0.0.1:3000").unwrap().handle(hello).unwrap();
+    Server::http("127.0.0.1:80").unwrap().handle(hello).unwrap();
 }

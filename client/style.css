@@ -1,0 +1,19 @@
+.blah {
+    display: none;
+}
+
+.flash .blah {
+    position: absolute;
+}
+
+.blah ul {
+    list-style-type: none;
+}
+
+.blah ul li:before {
+    content: "\25ba\00a0";
+}
+
+/*.stars:hover .blah {
+    display: block;
+}*/

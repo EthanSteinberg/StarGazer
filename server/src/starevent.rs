@@ -95,5 +95,5 @@ pub fn add_star_to_db(conn: &mut DatabaseConnection, star: &StarEvent) {
 }
 
 pub fn open_connection() -> DatabaseConnection {
-    access::open("/home/ethan/Projects/StarGazer/server/data/stars.db", Default::default()).unwrap()
+    access::open("./server/data/stars.db", Default::default()).unwrap()
 }
