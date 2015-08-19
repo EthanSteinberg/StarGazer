@@ -50,5 +50,5 @@ fn hello(req: Request, mut res: Response<Fresh>) {
 }
 
 fn main() {
-    Server::http("127.0.0.1:80").unwrap().handle(hello).unwrap();
+    Server::http("0.0.0.0:80").unwrap().handle(hello).unwrap();
 }

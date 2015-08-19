@@ -24,6 +24,7 @@ pub struct StarEvent {
     pub show_parent: Option<bool>,
     pub message_stars: Option<i64>,
     pub message_edits: Option<i64>,
+    pub message_owner_stars: Option<i64>,
 }
 
 fn convert_result_to_star(mut result: ResultRow) -> StarEvent {
@@ -42,6 +43,7 @@ fn convert_result_to_star(mut result: ResultRow) -> StarEvent {
         content: None,
         parent_id: None,
         message_edits: None,
+        message_owner_stars: None,
     }
 }
 
@@ -94,6 +96,13 @@ pub fn add_star_to_db(conn: &mut DatabaseConnection, star: &StarEvent) {
     assert!(result_set.step().unwrap().is_none());
 }
 
+fn get_database_path() -> String {
+    let mut path = std::env::current_exe().unwrap();
+    path.pop();
+    path.push("../../data/stars.db");
+    path.to_str().unwrap().to_owned()
+}
+
 pub fn open_connection() -> DatabaseConnection {
-    access::open("./server/data/stars.db", Default::default()).unwrap()
+    access::open(&get_database_path(), Default::default()).unwrap()
 }
