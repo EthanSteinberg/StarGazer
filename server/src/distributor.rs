@@ -36,7 +36,6 @@ fn get_stars(conn: &mut DatabaseConnection, req: Request) -> Option<Vec<StarEven
 }
 
 fn hello(req: Request, mut res: Response<Fresh>) {
-    
     let mut conn = open_connection();
 
     if let Some(stars) = get_stars(&mut conn, req) {
@@ -50,5 +49,5 @@ fn hello(req: Request, mut res: Response<Fresh>) {
 }
 
 fn main() {
-    Server::http("0.0.0.0:80").unwrap().handle(hello).unwrap();
+    Server::http("localhost:3000").unwrap().handle(hello).unwrap();
 }
