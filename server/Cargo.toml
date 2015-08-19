@@ -1,0 +1,25 @@
+[package]
+
+name = "star_gazer"
+version = "0.0.1"
+authors = ["Ethan Steinberg<ethan.steinberg@gmail.com>"]
+
+[lib]
+name= "starevent"
+path = "src/starevent.rs"
+
+[[bin]]
+name = "star_collector"
+path = "src/collector.rs"
+
+[[bin]]
+name = "star_distributor"
+path = "src/distributor.rs"
+
+[dependencies]
+rust-sqlite = "*"
+hyper = "*"
+serde = "*"
+serde_json = "*"
+serde_macros = "*"
+url = "*"
