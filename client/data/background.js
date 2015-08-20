@@ -32,6 +32,7 @@ function starIdentifier() {
 
     function getStarsFromDOM(star, box) {
         box.html(''); // Clear the box out
+        
         var myMessageID = parseID(star.parents('li, .message').attr('id'));
         return getStars(myMessageID, function(stars){
             box.append('<h4> Starred by: </h4>');

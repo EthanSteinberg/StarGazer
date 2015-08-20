@@ -6,6 +6,13 @@
     position: absolute;
 }
 
+li .blah {
+    position: absolute;
+    left: -70px;
+    width: 65px;
+    top: -5px;
+}
+
 .blah ul {
     list-style-type: none;
 }
