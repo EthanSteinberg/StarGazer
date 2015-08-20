@@ -13,7 +13,3 @@
 .blah ul li:before {
     content: "\25ba\00a0";
 }
-
-/*.stars:hover .blah {
-    display: block;
-}*/

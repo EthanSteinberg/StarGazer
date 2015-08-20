@@ -8,9 +8,7 @@ function pollForDomNodes(query, init) {
     var nodes = [];
     function poll() {
         var newNodes = query().filter(function(newNode) {
-             return nodes.every(function(node) {
-                return !node.isSameNode(newNode);
-            });
+            return nodes.indexOf(newNode) === -1;
         });
 
         for (var newNode of newNodes) {

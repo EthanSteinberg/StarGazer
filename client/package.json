@@ -1,0 +1,15 @@
+{
+  "title": "StarGazer",
+  "name": "stargazer",
+  "version": "0.1.8",
+  "description": "Shows which users have starred each chat message in chat.stackoverflow",
+  "main": "index.js",
+  "author": "Ethan Steinberg",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Lalaland/StarGazer",
+  "icon": "icon.png"
+}

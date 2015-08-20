@@ -1,12 +1,12 @@
 {
   "name": "Star Gazer",
   "description": "Shows which users have starred each chat message in chat.stackoverflow",
-  "version": "1.7",
+  "version": "1.8",
   "icons": {"128": "icon.png"},
   "content_scripts": [{
     "matches": ["*://chat.stackoverflow.com/rooms/*"],
-    "js": ["jquery.js", "polyfill.js", "background.js"],
-    "css": ["style.css"]
+    "js": ["data/jquery.js", "data/polyfill.js", "data/background.js"],
+    "css": ["data/style.css"]
   }],
   "manifest_version": 2
 }
