@@ -1,7 +1,7 @@
 extern crate hyper;
 extern crate serde_json;
 extern crate sqlite3;
-extern crate starevent;
+extern crate util;
 extern crate regex;
 
 use hyper::Client;
@@ -11,12 +11,12 @@ use sqlite3::DatabaseConnection;
 use std::thread;
 use std::collections::HashMap;
 
-use starevent::*;
+use util::*;
 
 const EVENTS_URL: &'static str = "http://chat.stackoverflow.com/events";
 const MAIN_URL: &'static str = "http://chat.stackoverflow.com/";
 
-const ACTIVE_ROOMS: [i64; 2] = [10, 17];
+const ACTIVE_ROOMS: [i64; 1] = [10];
 
 fn get_key() -> String {
    use std::io::Read;
@@ -77,15 +77,18 @@ fn update_room_counters(data: &Value, room_counters: &mut HashMap<i64, i64>) {
     }
 }
 
-fn parse_event(event_data: Value) -> Option<StarEvent> {
-    let event_type = event_data.find("event_type").and_then(|x| x.as_i64()).unwrap();
-    match event_type {
-        6 => Some(serde_json::from_value::<StarEvent>(event_data).unwrap()),
-        _ => None,
+fn parse_event(event_data: Value) -> Option<Event> {
+    let parsed = serde_json::from_value::<Event>(event_data.clone());
+
+    if parsed.is_ok() {
+        parsed.ok()
+    } else {
+        println!("Failed parsing {:?}, error: {:?}", event_data, parsed.err().unwrap());
+        None
     }
 }
 
-fn get_events_for_room(data: &Value, room_id: i64) -> Vec<StarEvent> {
+fn get_events_for_room(data: &Value, room_id: i64) -> Vec<Event> {
     data.find(&get_room_string(room_id))
         .and_then(|data| data.find("e"))
         .and_then(|x| x.as_array())
@@ -95,12 +98,12 @@ fn get_events_for_room(data: &Value, room_id: i64) -> Vec<StarEvent> {
         .unwrap_or(Vec::new())
 }
 
-fn get_events(data: &Value) -> Vec<StarEvent> {
+fn get_events(data: &Value) -> Vec<Event> {
     ACTIVE_ROOMS.iter().flat_map(|room_id| get_events_for_room(data, *room_id)).collect()
 }
 
-fn process_event(conn: &mut DatabaseConnection, event: &StarEvent) { 
-    if let Some(old_event) = get_star_for_message_and_user(conn, event.message_id, event.user_id) {
+fn process_star_event(conn: &mut DatabaseConnection, event: &Event) { 
+    if let Some(old_event) = get_star_for_message_and_user(conn, event.message_id.unwrap(), event.user_id) {
         if old_event.id == event.id {
             // Repeat event somehow?
 //            println!("Ignoring star {:?}", event);
@@ -108,13 +111,17 @@ fn process_event(conn: &mut DatabaseConnection, event: &StarEvent) {
         } else {
             // This user has added a star, so this must be the remove star event
 //            println!("Removing star {:?}", event);
-            starevent::remove_star_from_db(conn, old_event.id);
+            remove_star_from_db(conn, old_event.id);
         }
     } else {
 //        println!("Adding star {:?}", event);
         // Mark the user as starring this item
         add_star_to_db(conn, event);
     }
+}
+
+fn process_message_event(conn: &mut DatabaseConnection, event: &Event) {
+    update_message(conn, event);
 }
 
 fn main() {
@@ -125,10 +132,13 @@ fn main() {
 
     loop {
         let data = get_data(&key, &room_counters);
-        // println!("{}", serde_json::to_string_pretty(&data).unwrap());
         
         for event in get_events(&data) {
-            process_event(&mut conn, &event);
+            if event.event_type.unwrap() == 6 {
+                process_star_event(&mut conn, &event);
+            } else if event.content.is_some() {
+                process_message_event(&mut conn, &event);
+            }
         }
 
         update_room_counters(&data, &mut room_counters);

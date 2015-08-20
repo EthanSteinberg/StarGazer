@@ -10,3 +10,10 @@ CREATE TABLE stars (
 );
 
 CREATE UNIQUE INDEX stars_message_user ON stars(message_id, user_id);
+
+DROP TABLE IF EXISTS messages;
+
+CREATE TABLE messages (
+    id INTEGER UNIQUE NOT NULL,
+    content TEXT NOT NULL
+);

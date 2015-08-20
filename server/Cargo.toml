@@ -5,8 +5,8 @@ version = "0.0.1"
 authors = ["Ethan Steinberg<ethan.steinberg@gmail.com>"]
 
 [lib]
-name= "starevent"
-path = "src/starevent.rs"
+name= "util"
+path = "src/util.rs"
 
 [[bin]]
 name = "star_collector"
