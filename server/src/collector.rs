@@ -16,7 +16,7 @@ use util::*;
 const EVENTS_URL: &'static str = "http://chat.stackoverflow.com/events";
 const MAIN_URL: &'static str = "http://chat.stackoverflow.com/";
 
-const ACTIVE_ROOMS: [i64; 1] = [10];
+const ACTIVE_ROOMS: [i64; 1] = [10, 17, 1];
 
 fn get_key() -> String {
    use std::io::Read;
